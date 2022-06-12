@@ -25,15 +25,18 @@ class Screen {
         this.canvas = this.doc.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
 
-        this.canvas.width = this.win.innerWidth - 100;
-        this.canvas.height = (this.win.innerWidth - 100) * 0.56;
+        // Width should be a multiple of 64 to match our tile size
+        this.canvas.width = this.win.innerWidth - (this.win.innerWidth % 64);
+        // Create a 16x9 aspect ratio that's also a multiple of 64
+        let baseWidth = this.canvas.width * 0.56;
+        this.canvas.height = baseWidth - (baseWidth % 64);
+
         this.doc.body.appendChild(this.canvas);
     }
 
     update(entities, self) {
         // clear the screen before drawing new frame
         self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height);
-        self.canvas.style.border = "red";
 
         entities.forEach(ent => {
             self.ctx.drawImage(ent.sprite, ent.x, ent.y);
